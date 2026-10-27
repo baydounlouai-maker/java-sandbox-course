@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+await page.goto('http://localhost:8765/');
+await page.waitForSelector('.cm-editor');
+await page.waitForTimeout(600);
+await page.evaluate(() => document.querySelector('.editor-card').scrollIntoView());
+await page.waitForTimeout(400);
+const sw = await page.evaluate(() => document.documentElement.scrollWidth);
+console.log('scrollWidth', sw);
+await page.screenshot({ path: process.argv[2] });
+await browser.close();

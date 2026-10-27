@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java Island: learn Java in 3D</title>
+<meta name="description" content="A hands-on Java course where the classes you write come to life in a 3D world. Runs entirely in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cellipse cx='17' cy='24' rx='15' ry='6' fill='%237fd36b' stroke='%231f2a44' stroke-width='2'/%3E%3Cpath d='M17 6l6 12H11z' fill='%233fa65b' stroke='%231f2a44' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Fira+Code:wght@400;500&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Java Island home">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="24" rx="15" ry="6" fill="#7fd36b" stroke="#1f2a44" stroke-width="2"/><path d="M17 6l6 12H11z" fill="#3fa65b" stroke="#1f2a44" stroke-width="2" stroke-linejoin="round"/></svg>
+    <span>Java Island</span>
+  </a>
+  <nav class="lesson-dots" id="lessonDots" aria-label="Lessons"></nav>
+  <div class="spacer"></div>
+  <div class="collab" id="collab"></div>
+</header>
+
+<main class="layout">
+  <section class="card lesson-card" id="lessonCard" aria-labelledby="lessonTitle">
+    <div class="lesson-scroll">
+      <span class="badge" id="lessonBadge"></span>
+      <h1 id="lessonTitle"></h1>
+      <div class="lesson-intro" id="lessonIntro"></div>
+      <div class="concepts" id="lessonConcepts"></div>
+      <h2 class="steps-title" id="stepsTitle">Your tasks</h2>
+      <ol class="steps" id="lessonSteps"></ol>
+      <div class="hints" id="hints"></div>
+    </div>
+    <div class="lesson-actions" id="lessonActions">
+      <button type="button" class="btn" id="hintBtn">Give me a hint</button>
+      <button type="button" class="btn ghost" id="solutionBtn">Show solution</button>
+      <button type="button" class="btn link" id="resetBtn">Start over</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn icon" id="prevBtn" aria-label="Previous lesson"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button type="button" class="btn icon" id="nextBtn" aria-label="Next lesson"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </section>
+
+  <section class="card editor-card" aria-label="Code editor">
+    <div class="editor-bar">
+      <div class="tabs" id="tabs" role="tablist" aria-label="Files"></div>
+      <button type="button" class="btn small ghost" id="newFileBtn" title="Add a new class file" aria-label="New class file">+ Class</button>
+      <button type="button" class="btn run" id="runBtn" title="Run (Ctrl+Enter)">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span>Run it!</span>
+      </button>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor" id="editor"></div>
+      <div class="editor-overlay" id="editorOverlay" hidden></div>
+    </div>
+    <div class="output" id="output" aria-live="polite">
+      <div class="output-head">
+        <span class="output-title">What happened</span>
+        <span class="run-meta" id="runMeta"></span>
+      </div>
+      <div class="output-body" id="outputBody">
+        <p class="muted">Write some code and press <b>Run it!</b> (or Ctrl+Enter).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card world-card" aria-label="3D world">
+    <div class="world" id="world"></div>
+    <div class="world-top">
+      <span class="chip" id="worldChip">Empty island</span>
+      <div class="spacer"></div>
+      <button type="button" class="round-btn" id="replayBtn" aria-label="Replay the animation" title="Replay"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      <button type="button" class="round-btn" id="cameraBtn" aria-label="Reset the camera" title="Reset camera"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+    <div class="inspector" id="inspector" hidden></div>
+    <p class="world-hint">Drag to look around · scroll to zoom · click a creature</p>
+  </section>
+</main>
+
+<dialog id="dialog" class="dialog"></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

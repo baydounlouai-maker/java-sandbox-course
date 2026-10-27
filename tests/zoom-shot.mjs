@@ -1,0 +1,20 @@
+import { chromium } from 'playwright';
+const out = process.argv[2];
+const lessonIdx = Number(process.argv[3] || 18);
+const wait = Number(process.argv[4] || 2000);
+const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await page.goto('http://localhost:8765/');
+await page.waitForSelector('.cm-editor');
+await page.click(`#lessonDots .dot:nth-child(${lessonIdx})`);
+await page.click('#solutionBtn');
+await page.click('dialog .btn.primary');
+await page.waitForTimeout(200);
+await page.click('#runBtn');
+const box = await page.$('.world-canvas');
+const b = await box.boundingBox();
+await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
+for (let i = 0; i < 6; i++) { await page.mouse.wheel(0, -200); await page.waitForTimeout(30); }
+await page.waitForTimeout(wait);
+await (await page.$('.world-card')).screenshot({ path: out });
+await browser.close();

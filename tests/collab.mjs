@@ -1,0 +1,53 @@
+// Two browsers, one room: node tests/collab.mjs [outDir]
+import { chromium } from 'playwright';
+const out = process.argv[2] || '.';
+const launch = () => chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const [ba, bb] = await Promise.all([launch(), launch()]);
+const a = await ba.newPage({ viewport: { width: 1440, height: 900 } });
+const b = await bb.newPage({ viewport: { width: 1440, height: 900 } });
+for (const [p, n] of [[a, 'A'], [b, 'B']]) p.on('pageerror', (e) => console.log(n, 'pageerror', e.message));
+await a.goto('http://localhost:8765/');
+await a.waitForSelector('.cm-editor');
+await a.click('#collab .btn');
+await a.fill('#nameInput', 'Tutor');
+await a.click('dialog .btn.primary');
+await a.waitForSelector('dialog .link-box input');
+const link = await a.inputValue('dialog .link-box input');
+console.log('link', link);
+await a.click('dialog .btn.primary');
+await b.goto(link);
+await b.waitForSelector('#nameInput');
+await b.fill('#nameInput', 'Student');
+await b.click('dialog .btn.primary');
+const t0 = Date.now();
+await b.waitForSelector('#editorOverlay', { state: 'hidden', timeout: 45000 }).catch(() => console.log('B never synced'));
+console.log('synced after', Date.now() - t0, 'ms');
+await b.waitForTimeout(1000);
+// A types; B should see it
+await a.click('.cm-content');
+await a.keyboard.press('Control+End');
+await a.keyboard.type('// hello from tutor');
+await b.waitForTimeout(1500);
+const bText = await b.textContent('.cm-content');
+console.log('B sees typing:', bText.includes('hello from tutor'));
+console.log('B sees tutor cursor:', await b.$('.cm-ySelectionCaret') !== null, await b.textContent('.cm-ySelectionInfo').catch(() => ''));
+await b.screenshot({ path: out + '/collab-cursor.png' });
+console.log('A pill:', await a.textContent('#collab .pill'), '| B pill:', await b.textContent('#collab .pill'));
+// B switches lesson, A should follow
+await b.click('#lessonDots .dot:nth-child(2)');
+await a.waitForTimeout(1500);
+console.log('A follows lesson:', await a.textContent('#lessonTitle'));
+// A runs -> B runs too
+await a.click('.cm-content');
+await a.keyboard.press('Control+End');
+await a.keyboard.type('\nclass Extra { }');
+await b.waitForTimeout(800);
+await b.click('#solutionBtn');
+await b.click('dialog .btn.primary');
+await a.waitForTimeout(1200);
+await a.click('#runBtn');
+await b.waitForTimeout(2500);
+console.log('B output after A ran:', (await b.textContent('#outputBody')).slice(0, 120));
+await a.screenshot({ path: out + '/collab-a.png' });
+await b.screenshot({ path: out + '/collab-b.png' });
+await Promise.all([ba.close(), bb.close()]);
