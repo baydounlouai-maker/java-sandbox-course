@@ -32,6 +32,13 @@ HTML, CSS and JavaScript that GitHub Pages can host as-is.
   its `speak()` method.
 - **Progress is saved in the browser** (localStorage): code per lesson,
   finished steps and lessons.
+- **A one-hour final exam** (`exam.html`, linked from the top bar). 34 questions worth
+  100 points: multiple choice, true or false, fill in the blanks, find and fix the
+  compile errors, and write-the-code questions (those only use topics from before
+  classes). Interfaces and generics aren't in it. The timer keeps running if the tab
+  is closed and the exam is handed in at 0:00. Code answers are marked by running
+  hidden tests in a worker. The results page explains every answer and links to the
+  lessons worth revisiting. Answers and past results live in localStorage.
 - **Live tutoring rooms.** Press *Invite someone* and share the link. Everyone
   in the room edits the same files with live cursors, follows the same
   lesson, sees each other's pointer in the 3D world, and when anyone presses
@@ -84,6 +91,9 @@ js/runner-worker.js   compiles and runs code off the main thread
 js/session.js         where code lives: localStorage or a shared room document
 js/collab.js          Yjs over WebRTC (Trystero)
 js/editor.js          CodeMirror 6 setup
+exam.html, css/exam.css, js/exam/
+                      the final exam: questions.js (questions + answer key),
+                      grade.js (marking), exam-worker.js, exam.js (UI)
 js/java/              the Java engine: lexer, parser, compiler, runtime, built-in classes
 js/world/             three.js world, creature models, animation timeline
 vendor/               pre-built bundles of three.js, CodeMirror, Yjs and Trystero
@@ -98,7 +108,8 @@ itself doesn't use it.
 
 ```sh
 npm install
-npm test                  # error-message tests + every lesson's solution passes its checks
+npm test                  # error-message tests, every lesson's solution, and the exam's answer key
+node tests/exam-browser.mjs   # takes the whole exam in headless Chrome (local server on :8765)
 npm run build:vendor      # rebuild vendor/ after updating a library
 node tests/smoke.mjs      # headless browser run (needs a local server on :8765 and Chrome)
 node tests/collab.mjs     # two browsers in one live room
@@ -113,3 +124,12 @@ class's fields, methods and parent. `r.call(obj, 'grow')` calls a method on a
 live object, and `r.has('for')` asks whether a language feature was used. A
 check returns `true` when the step is done, or a short string telling the
 student what's still missing. `npm test` makes sure your solution passes.
+
+### Changing the exam
+
+Questions live in `js/exam/questions.js`. `npm test` (via `tests/exam.mjs`)
+proves the answer key with the real engine. Every "what does this print"
+question with `run` set must print exactly its correct option. Every accepted
+blank must compile and print `expect`. Every broken program must fail to compile
+while its `solution` gets full marks. Every write-the-code solution must pass
+all its tests, and its starter must pass none. Points must add up to 100.

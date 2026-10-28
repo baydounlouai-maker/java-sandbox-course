@@ -4,7 +4,7 @@ import {
   HighlightStyle, syntaxHighlighting, tags, yCollab, yUndoManagerKeymap, Y
 } from '../vendor/editor.js';
 
-const theme = EditorView.theme({
+export const theme = EditorView.theme({
   '&': { height: '100%', fontSize: '14px', backgroundColor: '#ffffff', color: '#1f2a44' },
   '.cm-scroller': { fontFamily: "'Fira Code', ui-monospace, monospace", lineHeight: '1.6' },
   '.cm-content': { padding: '12px 0', caretColor: '#ff7a29' },
@@ -23,7 +23,7 @@ const theme = EditorView.theme({
   '.cm-panels': { backgroundColor: '#f6f8fd' }
 });
 
-const highlight = HighlightStyle.define([
+export const highlight = HighlightStyle.define([
   { tag: [tags.keyword, tags.modifier, tags.controlKeyword, tags.definitionKeyword, tags.operatorKeyword], color: '#7b3fe4', fontWeight: '500' },
   { tag: [tags.typeName, tags.className, tags.namespace], color: '#0a7a8a' },
   { tag: [tags.string, tags.character, tags.special(tags.string)], color: '#17803a' },

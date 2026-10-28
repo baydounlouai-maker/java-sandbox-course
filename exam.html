@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final exam · Java Island</title>
+<meta name="description" content="A one-hour Java exam: multiple choice, true or false, fill in the blanks, find and fix, and write-the-code questions. Runs entirely in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cellipse cx='17' cy='24' rx='15' ry='6' fill='%237fd36b' stroke='%231f2a44' stroke-width='2'/%3E%3Cpath d='M17 6l6 12H11z' fill='%233fa65b' stroke='%231f2a44' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Fira+Code:wght@400;500&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/exam.css">
+</head>
+<body class="exam-page">
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Java Island lessons">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="24" rx="15" ry="6" fill="#7fd36b" stroke="#1f2a44" stroke-width="2"/><path d="M17 6l6 12H11z" fill="#3fa65b" stroke="#1f2a44" stroke-width="2" stroke-linejoin="round"/></svg>
+    <span>Java Island</span>
+  </a>
+  <span class="badge exam-badge">Final exam</span>
+  <div class="spacer"></div>
+  <div class="exam-bar" id="examBar"></div>
+</header>
+
+<main class="exam-main" id="examMain">
+  <section class="card marking"><div class="spinner" aria-hidden="true"></div><h2>Loading the exam…</h2></section>
+</main>
+
+<dialog id="dialog" class="dialog"></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="js/exam/exam.js"></script>
+</body>
+</html>
